@@ -21,13 +21,35 @@ model User {
 }
 
 model Post {
-  id      Int     @id @default(autoincrement())
-  title   String
-  content String?
+  id         Int            @id @default(autoincrement())
+  title      String
+  content    String?
+  image      String?
+  
+  categories PostCategory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  posts PostCategory[]
+}
+
+model PostCategory {
+  postid      Int
+  catefgoryId Int
+
+  post     Post     @relation(fields: [postid], references: [id])
+  category Category @relation(fields: [catefgoryId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([postid, catefgoryId])
 }

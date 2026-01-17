@@ -10,6 +10,7 @@ import {
   getUserPosts,
   updatePost,
 } from "./post.service";
+import { upload } from "../../middlewares/multer";
 
 const router = Router();
 
@@ -17,10 +18,12 @@ const router = Router();
 router.post(
   "/post",
   authenticate,
+  upload.single("image"),
   validate(postSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const post = await createPost(req.body, (req as any).user.id);
+      const image = req.file?.filename;
+      const post = await createPost(req.body, (req as any).user.id, image);
       res.status(201).json({ message: "New post created", data: post });
     } catch (err) {
       next(err);
@@ -73,11 +76,13 @@ router.get(
 router.put(
   "/post/:id",
   authenticate,
+  upload.single("image"),
   validate(postSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const postId = Number(req.params.id);
-      const post = await updatePost((req as any).user.id, postId, req.body);
+      const image = req.file?.filename;
+      const post = await updatePost((req as any).user.id, postId, req.body, image);
       res.status(200).json({ message: "Update post success", data: post });
     } catch (err) {
       next(err);

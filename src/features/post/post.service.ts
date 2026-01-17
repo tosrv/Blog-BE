@@ -10,10 +10,10 @@ import {
 } from "./post.repository";
 
 // Create post
-export async function createPost(post: PostDTO, userId: number) {
+export async function createPost(post: PostDTO, userId: number, image?: string) {
   const { title } = post;
   if (!title) throw new AppError(400, "At least write the title");
-  return await addPost(post, userId);
+  return await addPost(post, userId, image);
 }
 
 // Display all posts
@@ -41,12 +41,13 @@ export async function updatePost(
   userId: number,
   postId: number,
   updatePost: PostDTO,
+  image?: string
 ) {
   const post = await getPost(postId);
   if (post.authorId !== userId)
     throw new AppError(403, "This is not your post");
 
-  return await modifyPost(postId, updatePost);
+  return await modifyPost(postId, updatePost, image);
 }
 
 // Delete post

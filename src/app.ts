@@ -16,6 +16,7 @@ const port = process.env.PORT;
 app.use(allowCors);
 app.use(json());
 app.use(cookieParser());
+app.use("/images", express.static("../public/images"));
 
 app.use("/api", authRouter, userRouter, postRouter);
 

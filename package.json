@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn ./src/app.ts"
   },
+  "prisma": {
+    "seed": "ts-node src/prisma/seed.ts"
+  },
   "keywords": [],
   "author": "Rahmat Tomy",
   "license": "ISC",
@@ -20,6 +23,7 @@
     "express": "^5.2.1",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
     "prisma": "^6.19.2"
   },
   "devDependencies": {
@@ -29,6 +33,7 @@
     "@types/express": "^5.0.6",
     "@types/joi": "^17.2.2",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
