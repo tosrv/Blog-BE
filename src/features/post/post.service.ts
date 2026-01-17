@@ -1,0 +1,59 @@
+import { PostDTO } from "../../types/post";
+import AppError from "../../utils/error";
+import {
+  addPost,
+  allPosts,
+  allUserPosts,
+  findPost,
+  modifyPost,
+  postDelete,
+} from "./post.repository";
+
+// Create post
+export async function createPost(post: PostDTO, userId: number) {
+  const { title } = post;
+  if (!title) throw new AppError(400, "At least write the title");
+  return await addPost(post, userId);
+}
+
+// Display all posts
+export async function getPosts() {
+  return await allPosts();
+}
+
+// Display post
+export async function getPost(id: number) {
+  const post = await findPost(id);
+  if (!post) throw new AppError(404, "Post not found");
+  return post;
+}
+
+// Display all user posts
+export async function getUserPosts(userId: number) {
+  const posts = await allUserPosts(userId);
+  if (!posts || posts.length === 1)
+    throw new AppError(404, "You haven't post yet");
+  return posts;
+}
+
+// Update post
+export async function updatePost(
+  userId: number,
+  postId: number,
+  updatePost: PostDTO,
+) {
+  const post = await getPost(postId);
+  if (post.authorId !== userId)
+    throw new AppError(403, "This is not your post");
+
+  return await modifyPost(postId, updatePost);
+}
+
+// Delete post
+export async function deletePost(userId: number, postId: number) {
+  const post = await getPost(postId);
+  if (post.authorId !== userId)
+    throw new AppError(403, "This is not your post");
+
+  await postDelete(postId)
+}
