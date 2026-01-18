@@ -27,7 +27,7 @@ export async function allPosts() {
       image: true,
       categories: {
         select: {
-          catefgoryId: true,
+          category: true,
         },
       },
     },
@@ -46,7 +46,7 @@ export async function findPost(id: number) {
       authorId: true,
       categories: {
         select: {
-          catefgoryId: true,
+          category: true
         },
       },
     },
@@ -64,7 +64,7 @@ export async function allUserPosts(id: number) {
       image: true,
       categories: {
         select: {
-          catefgoryId: true,
+          category: true,
         },
       },
     },
@@ -88,7 +88,7 @@ export async function modifyPost(id: number, post: PostDTO, image?: string) {
       updatedAt: true,
       categories: {
         select: {
-          catefgoryId: true,
+          category: true,
         },
       },
     },

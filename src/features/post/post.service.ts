@@ -1,5 +1,6 @@
 import { PostDTO } from "../../types/post";
 import AppError from "../../utils/error";
+import { toImageUrl } from "../../utils/imageUrl";
 import {
   addPost,
   allPosts,
@@ -10,7 +11,11 @@ import {
 } from "./post.repository";
 
 // Create post
-export async function createPost(post: PostDTO, userId: number, image?: string) {
+export async function createPost(
+  post: PostDTO,
+  userId: number,
+  image?: string,
+) {
   const { title } = post;
   if (!title) throw new AppError(400, "At least write the title");
   return await addPost(post, userId, image);
@@ -18,22 +23,32 @@ export async function createPost(post: PostDTO, userId: number, image?: string) 
 
 // Display all posts
 export async function getPosts() {
-  return await allPosts();
+  const posts = await allPosts();
+  return posts.map((post) => ({
+    ...post,
+    image: toImageUrl(post.image),
+  }));
 }
 
 // Display post
 export async function getPost(id: number) {
   const post = await findPost(id);
   if (!post) throw new AppError(404, "Post not found");
-  return post;
+  return {
+    ...post,
+    image: toImageUrl(post.image),
+  };
 }
 
 // Display all user posts
 export async function getUserPosts(userId: number) {
   const posts = await allUserPosts(userId);
-  if (!posts || posts.length === 1)
+  if (!posts || posts.length === 0)
     throw new AppError(404, "You haven't post yet");
-  return posts;
+  return posts.map((post) => ({
+    ...post,
+    image: toImageUrl(post.image),
+  }));
 }
 
 // Update post
@@ -41,7 +56,7 @@ export async function updatePost(
   userId: number,
   postId: number,
   updatePost: PostDTO,
-  image?: string
+  image?: string,
 ) {
   const post = await getPost(postId);
   if (post.authorId !== userId)
@@ -52,9 +67,10 @@ export async function updatePost(
 
 // Delete post
 export async function deletePost(userId: number, postId: number) {
-  const post = await getPost(postId);
+  const post = await findPost(postId);
+  if (!post) throw new AppError(404, "Post not found");
   if (post.authorId !== userId)
     throw new AppError(403, "This is not your post");
 
-  await postDelete(postId)
+  await postDelete(postId);
 }

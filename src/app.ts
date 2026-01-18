@@ -1,13 +1,13 @@
 import express, { json } from "express";
 import dotenv from "dotenv";
+import path from "path";
 import { allowCors } from "./middlewares/cors";
 import cookieParser from "cookie-parser";
+import { errorHandler } from "./middlewares/error";
 
 import authRouter from "./features/auth/auth.controller";
 import userRouter from "./features/user/user.controller";
 import postRouter from "./features/post/post.controller";
-
-import { errorHandler } from "./middlewares/error";
 
 const app = express();
 dotenv.config();
@@ -16,7 +16,7 @@ const port = process.env.PORT;
 app.use(allowCors);
 app.use(json());
 app.use(cookieParser());
-app.use("/images", express.static("../public/images"));
+app.use("/", express.static(path.join(__dirname, "../public/images")));
 
 app.use("/api", authRouter, userRouter, postRouter);
 

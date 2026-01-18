@@ -21,11 +21,11 @@ model User {
 }
 
 model Post {
-  id         Int            @id @default(autoincrement())
-  title      String
-  content    String?
-  image      String?
-  
+  id      Int     @id @default(autoincrement())
+  title   String
+  content String?
+  image   String?
+
   categories PostCategory[]
 
   createdAt DateTime @default(now())
@@ -43,13 +43,13 @@ model Category {
 }
 
 model PostCategory {
-  postid      Int
-  catefgoryId Int
+  postId     Int
+  categoryId Int
 
-  post     Post     @relation(fields: [postid], references: [id])
-  category Category @relation(fields: [catefgoryId], references: [id])
+  post     Post     @relation(fields: [postId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
 
   createdAt DateTime @default(now())
 
-  @@id([postid, catefgoryId])
+  @@id([postId, categoryId])
 }
